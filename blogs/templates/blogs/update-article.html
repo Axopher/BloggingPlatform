@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Edit Blog{% endblock %}
+{% block content %}
+<br>
+<br>
+
+<div class="form-create-edit">
+<span><a  href="{{request.META.HTTP_REFERER}}">Go Back</a></span>
+<p><h2>Update Blog Post</h2></p>
+<br>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ form.media }}
+        <input type="submit" value="Update">
+    </form>
+</div>
+<br>
+<br>
+<script>
+    var id = "{{ user.id }}";
+    document.getElementById("logged-user").value = id;
+</script>     
+{% endblock %}

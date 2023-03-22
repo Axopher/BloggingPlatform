@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+<main>
+<article class="post">
+  <a class="" href="{% url 'home' %}">Go Back</a>
+  <br>
+  <br>
+  <header>
+    <h1 class="post-title">{{ post.title }}</h1>
+    <p class="post-meta">By {{ post.author.first_name }}
+        {{ post.author.last_name }} | {{ post.created}}
+        {% if request.user.id == post.author.id %}
+        <a href="{% url 'update-article' post.id %}">Edit</a> | <a href="{% url 'delete-article' post.id %}">Delete</a>
+        {% endif %} 
+    </p>
+  </header>
+  <!-- <div class="post-image">
+    <img src="https://via.placeholder.com/800x400" alt="Blog post image">
+  </div> -->
+  
+<div class="post-content">
+<p>{{post.body|safe}}</p>
+</div>
+
+<hr>
+
+<div class="comment">
+    <h2>Comment Section</h2>
+    {% if request.user.is_authenticated %}
+    <div class="comment-form">
+        <h3>Leave a Comment</h3>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <textarea id="comment" name="comment" required></textarea>
+          </div>
+          <br>
+          <button type="submit">Post Comment</button>
+        </form>
+    </div>
+    <br>
+    {% else %}
+    <small><a href="{% url 'login' %}">Log in to comment</a></small> 
+    <br>
+    <br>
+    {% endif %}
+    {% for comment in post.comments.all %}
+    <ul>
+      <li>        
+        <div class="comment-meta">
+          <!-- <img src="https://via.placeholder.com/50" alt="Profile Picture"> -->
+          <div class="comment-author">
+            <h4>@{{comment.name}}</h4>
+            <span class="comment-date">{{comment.created}}</span>
+            {% if request.user == comment.name %}
+            (<span class="comment-actions">
+                <a href="{% url 'edit-comment' comment.id %}" class="edit-comment">Edit</a>|
+                <a href="{% url 'delete-comment' comment.id %}" class="delete-comment">Delete</a>
+            </span>)
+            {% endif %}
+          </div>
+        </div>
+        <p>{{ comment.body }}</p>
+      </li>
+    </ul>
+    {% endfor%}
+</div>
+  
+</article>
+</main>
+{% endblock %}

@@ -1,0 +1,23 @@
+<header>
+    {% if user.is_authenticated %}
+    <h3>Welcome, {{request.user|capfirst}}!!!</h3>
+    {% endif %}
+    <a class="home-nav" style="color:white;font-size:16px;float:left;text-decoration:none;" href="{% url 'home' %}">Home</a></small>
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'create-article' %}">Create a blog</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}">Login/Sign Up</a>
+            {% endif %}
+            <!-- <li class="dropdown-menu"><a href="">User</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+            </li> -->
+        </ul>
+    </nav>
+</header>

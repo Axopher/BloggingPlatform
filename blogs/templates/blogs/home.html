@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form class="search-container" action="{% url 'home' %}" method="get">
+        <input type="text" name="q" placeholder="Search...">
+        <button type="submit">Go</button>
+    </form>
+
+
+<section>
+{% for post in object_list %}
+<a href="{% url 'detail-article' post.id %}">    
+<article class="blogs">
+    <h2><a href="{% url 'detail-article' post.id %}">{{ post.title }}</a></h2>
+    <small>By {{ post.author.first_name }} {{ post.author.last_name }} | {{ post.created }}
+        {% if request.user.id == post.author.id %}
+        |<a href="{% url 'update-article' post.id %}">Edit</a> |<a href="{% url 'delete-article' post.id %}">Delete</a>
+        {% endif %}
+    </small>
+    <p>{{ post.body|slice:'0:250'|safe }}...</p>
+    <!-- <button><a href="{% url 'detail-article' post.id %}">Read More</a></button> -->
+</article>
+</a>
+{% endfor %}
+</section>
+
+
+{% include 'pagination.html' %}
+    
+{% include 'footer.html' %}
+
+{% endblock content %}
+

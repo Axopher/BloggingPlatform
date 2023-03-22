@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Edit Comment{% endblock %}
+{% block content %}
+<br>
+<br>
+
+<div class="form-create-edit">
+    <a href="{{request.META.HTTP_REFERER}}">Go Back</a>
+<h2>Update Your Comment</h2>
+<br>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.body }}
+        <br>
+        <input type="submit" value="Update">
+    </form>
+</div>  
+{% endblock %}
