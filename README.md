@@ -11,3 +11,7 @@ d) Finally, make migrations:
    >python manage.py migrate
 e) Run the server:
    >python manage.py runserver
+
+Admin Details:-
+username:aman
+password:aman
