@@ -1,6 +1,7 @@
 # BloggingPlatform
 Steps to run the application:
-a) First, make sure python is install in your machine
+a) First, make sure python is installed in your machine and then, run this command
+   >python -m venv <name_of_virtualenv> 
 b) After that, simple clone the project using this command:
    >git clone "https://github.com/Axopher/BloggingPlatform.git"
 c) Then, run this command:
