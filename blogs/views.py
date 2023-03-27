@@ -44,6 +44,48 @@ class HomeView(ListView):
         return queryset
 
 
+
+
+# class ArticleDetailView(DetailView):
+#     model = Post
+#     template_name = 'blogs/detail-article.html'
+
+# @method_decorator(login_required(login_url='login'), name='dispatch')
+# class ArticleCommentView(CreateView):
+#     model = Comment
+#     form_class = CommentForm
+#     template_name = 'blogs/detail-article.html'
+
+
+@method_decorator(login_required(login_url='login'), name='dispatch')
+class ArticleCreateView(CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blogs/create-article.html'
+    # fields = '__all__'   
+
+    
+@method_decorator(login_required(login_url='login'), name='dispatch')
+class ArticleUpdateView(UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'blogs/update-article.html'
+
+    @method_decorator(author_only)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)    
+
+@method_decorator(login_required(login_url='login'), name='dispatch')
+class ArticleDeleteView(DeleteView):
+    model = Post
+    fields = '__all__'
+    template_name = 'blogs/delete-article.html'
+    success_url = reverse_lazy('home')
+
+    @method_decorator(author_only)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)      
+        
 def blogPost(request,pk):
     post = Post.objects.get(id=pk)
     if request.method == 'POST':
@@ -87,46 +129,3 @@ def deleteComment(request,pk):
 
     context = {'comment':comment}
     return render(request,'blogs/delete-article.html',context)
-
-
-
-# class ArticleDetailView(DetailView):
-#     model = Post
-#     template_name = 'blogs/detail-article.html'
-
-# @method_decorator(login_required(login_url='login'), name='dispatch')
-# class ArticleCommentView(CreateView):
-#     model = Comment
-#     form_class = CommentForm
-#     template_name = 'blogs/detail-article.html'
-
-
-@method_decorator(login_required(login_url='login'), name='dispatch')
-class ArticleCreateView(CreateView):
-    model = Post
-    form_class = PostForm
-    template_name = 'blogs/create-article.html'
-    # fields = '__all__'   
-
-    
-@method_decorator(login_required(login_url='login'), name='dispatch')
-class ArticleUpdateView(UpdateView):
-    model = Post
-    form_class = PostForm
-    template_name = 'blogs/update-article.html'
-
-    @method_decorator(author_only)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)    
-
-@method_decorator(login_required(login_url='login'), name='dispatch')
-class ArticleDeleteView(DeleteView):
-    model = Post
-    fields = '__all__'
-    template_name = 'blogs/delete-article.html'
-    success_url = reverse_lazy('home')
-
-    @method_decorator(author_only)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)      
-        
