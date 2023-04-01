@@ -3,8 +3,9 @@ from . import views
 from .views import *
 
 urlpatterns = [
-    path('',HomeView.as_view(),name='home'),
-    path('article/<str:pk>/',views.blogPost,name='detail-article'),
+    path('',views.home,name='home'),
+    path('myblogs',views.UserBlogsView,name='user-blogs'),
+    path('article/<str:pk>/',views.BlogPost,name='detail-article'),
     path('create-article/',ArticleCreateView.as_view(),name='create-article'),
     path('update-article/<str:pk>/',ArticleUpdateView.as_view(),name='update-article'),
     path('delete-article/<str:pk>/',ArticleDeleteView.as_view(),name='delete-article'),

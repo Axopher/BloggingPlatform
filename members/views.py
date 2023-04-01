@@ -23,10 +23,16 @@ def loginUser(request):
         if user is not None:
             login(request,user)
             messages.success(request,"User successfully logged in",extra_tags='success')
-            return redirect('home')
+            # get the previous page URL from the session
+            previous_page_url = request.session.get('previous_page_url', '/')
+            # redirect to the previous page
+            return redirect(previous_page_url)
+
         else:
             messages.error(request,"Username or password is incorrect",extra_tags='error')    
-
+    
+    # store the current page URL in the session
+    request.session['previous_page_url'] = request.META.get('HTTP_REFERER', '/')
     return render(request,'members/login.html')
 
 def logoutUser(request):

@@ -12,6 +12,7 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseForbidden
 
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 
 def author_only(view_func):
@@ -29,21 +30,46 @@ def author_only(view_func):
 
 
 
-class HomeView(ListView):
-    model = Post
-    paginate_by = 4
-    template_name = 'blogs/home.html'
+# class HomeView(ListView):
+#     model = Post
+#     paginate_by = 4
+#     template_name = 'blogs/home.html'
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        query = self.request.GET.get('q')
-        if query:
-            queryset = queryset.filter(
-                Q(title__icontains=query) | Q(body__icontains=query)
-            )
-        return queryset
+#     def get_queryset(self):
+#         queryset = super().get_queryset()
+#         query = self.request.GET.get('q')
+#         if query:
+#             queryset = queryset.filter(
+#                 Q(title__icontains=query) | Q(body__icontains=query)
+#             )
+#         return queryset
+
+def home(request):
+    search_query = ''
+
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+    
+    posts = Post.objects.filter(
+        Q(title__icontains=search_query) | Q(body__icontains=search_query)    
+    )
+
+    page = request.GET.get('page')
+    results = 2
+    paginator = Paginator(posts,results)
+    
+    try:        
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        posts = paginator.page(page)
+    except EmptyPage:
+        page = paginator.num_pages    
+        posts = paginator.page(page)
 
 
+    context={'posts':posts,'search_query':search_query,'paginator':paginator}
+    return render(request,'blogs/home.html',context)
 
 
 # class ArticleDetailView(DetailView):
@@ -85,8 +111,18 @@ class ArticleDeleteView(DeleteView):
     @method_decorator(author_only)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)      
-        
-def blogPost(request,pk):
+
+@login_required(login_url='login')
+def UserBlogsView(request):
+    user = request.user
+    posts = Post.objects.filter(author=user)
+    context = {'posts' : posts}       
+
+    return render(request,'blogs/home.html',context)
+
+
+
+def BlogPost(request,pk):
     post = Post.objects.get(id=pk)
     if request.method == 'POST':
         comment = Comment.objects.create(

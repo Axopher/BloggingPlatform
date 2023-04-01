@@ -7,7 +7,7 @@
 <a href="{{request.META.HTTP_REFERER}}">Go Back</a>
 <h2>Add Blog Post</h2>
 <br>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         {{ form.media }}

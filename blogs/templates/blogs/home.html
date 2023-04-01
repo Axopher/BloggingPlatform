@@ -1,23 +1,27 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-    <form class="search-container" action="{% url 'home' %}" method="get">
-        <input type="text" name="q" placeholder="Search...">
+    <form  id="searchForm" class="search-container" action="{% url 'home' %}" method="get">
+        <input type="text" value="{{search_query}}" name="search_query" placeholder="Search...">
         <button type="submit">Go</button>
     </form>
 
 
 <section>
-{% for post in object_list %}
+{% for post in posts %}
 <a href="{% url 'detail-article' post.id %}">    
 <article class="blogs">
     <h2><a href="{% url 'detail-article' post.id %}">{{ post.title }}</a></h2>
-    <small>By {{ post.author.first_name }} {{ post.author.last_name }} | {{ post.created }}
+    <small>By {{ post.author.first_name }} {{ post.author.last_name }} | {{ post.created|timesince }} ago
         {% if request.user.id == post.author.id %}
         |<a href="{% url 'update-article' post.id %}">Edit</a> |<a href="{% url 'delete-article' post.id %}">Delete</a>
         {% endif %}
     </small>
+    {% if post.featured_image %}
+    <p class="posts-image"><img class="images" src="{{ post.featured_image.url }}" alt="Blog post image"></p>
+    {% endif %}
     <p>{{ post.body|slice:'0:250'|safe }}...</p>
-    <!-- <button><a href="{% url 'detail-article' post.id %}">Read More</a></button> -->
+    <!-- <button><a style="color:white" class="read-more" href="{% url 'detail-article' post.id %}">Read More</a></button> -->
 </article>
 </a>
 {% endfor %}

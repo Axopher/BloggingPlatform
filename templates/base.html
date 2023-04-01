@@ -17,18 +17,20 @@
 
     {% include 'navbar.html' %}
     <br>
+    
     <div class="alert-container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert-message">
+        <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+          <p class="alert__message">{{ message }}</p>
+          <button class="alert__close">x</button>
+        </div>
+    </div>  
+    {% endfor %}
+    {% endif %}
+    </div>
       
-      {% if messages %}
-      {% for message in messages %}
-          <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
-            <p class="alert__message">{{ message }}</p>
-            <button class="alert__close">x</button>
-          </div>
-          
-      {% endfor %}
-      {% endif %}
-      </div>
     
 
     {% block content %}

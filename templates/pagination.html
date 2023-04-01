@@ -1,20 +1,52 @@
-{% if is_paginated %}
+
 <div class="pagination">
-{% if page_obj.has_previous %}
-<a href="?page={{ page_obj.previous_page_number }}" class="prev">&laquo; Prev</a>
+{% if posts.has_previous %}
+<a href="?search_query={{request.GET.search_query}}&page={{ posts.previous_page_number }}" class="prev page-link" data-page="{{posts.previous_page_number}}">&laquo; Prev</a>
 {% endif %}
-<small style="font-size: 16px;
+<!-- <small style="font-size: 16px;
 padding: 8px 16px;
-border-radius: 5px;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</small>   
-<!-- <a href="#" class="active">1</a>
-<a href="#">2</a>
-<a href="#">3</a>
-<a href="#">4</a>
-<a href="#">5</a> -->
-{% if page_obj.has_next %}
-<a href="?page={{ page_obj.next_page_number }}" class="next">Next &raquo;</a>
+border-radius: 5px;">Page {{ projects.number }} of {{ projects.paginator.num_pages }}</small>    -->
+{% for page in paginator.page_range %}
+
+{% if page == posts.number %}
+<a href="?page={{page}}" class="active">{{page}}</a>
+{% else %}
+<a href="?page={{page}}">{{page}}</a>
+{% endif %}
+{% endfor %}
+{% if posts.has_next %}
+<a href="?search_query={{request.GET.search_query}}&page={{ posts.next_page_number }}" class="next page-link" data-page="{{posts.next_page_number}}">Next &raquo;</a>
 {% endif %}
 </div>  
-{% endif %}
+
 <br>
 <br>
+
+<script type="text/javascript">
+    // GET SEARCH FROM AND PAGE LINKS
+    let searchForm = document.getElementById('searchForm')
+    let pageLinks = document.getElementsByClassName('page-link')
+
+    // ENSURE SEARCH FROM EXISTS
+    if(searchForm){
+        for(let i=0; pageLinks.length > i; i++){
+            pageLinks[i].addEventListener('click',function (e){
+                e.preventDefault()
+                // GET THE DATA ATTRIBUTE
+                let page = this.dataset.page
+                
+                // ADD HIDDEN SEARCH INPUT TO FORM
+                searchForm.innerHTML += `<input value=${page} name="page" hidden/>`
+                query = searchForm.querySelector('input[name="q"]');
+                console.log(query)
+                if (query) {
+                    searchForm.innerHTML += `<input value="${query}" name="q" hidden/>`
+                }
+
+                //SUBMIT FORM
+                searchForm.submit()
+
+            })
+        }
+    }
+</script>

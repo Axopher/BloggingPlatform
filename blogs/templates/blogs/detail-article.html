@@ -9,15 +9,17 @@
   <header>
     <h1 class="post-title">{{ post.title }}</h1>
     <p class="post-meta">By {{ post.author.first_name }}
-        {{ post.author.last_name }} | {{ post.created}}
+        {{ post.author.last_name }} | {{ post.created|timesince}} ago
         {% if request.user.id == post.author.id %}
         <a href="{% url 'update-article' post.id %}">Edit</a> | <a href="{% url 'delete-article' post.id %}">Delete</a>
         {% endif %} 
     </p>
   </header>
-  <!-- <div class="post-image">
-    <img src="https://via.placeholder.com/800x400" alt="Blog post image">
-  </div> -->
+  {% if post.featured_image %}
+  <div class="post-image">
+    <img src="{{ post.featured_image.url }}" alt="Blog post image">
+  </div>
+  {% endif %}
   
 <div class="post-content">
 <p>{{post.body|safe}}</p>
@@ -52,7 +54,7 @@
           <!-- <img src="https://via.placeholder.com/50" alt="Profile Picture"> -->
           <div class="comment-author">
             <h4>@{{comment.name}}</h4>
-            <span class="comment-date">{{comment.created}}</span>
+            <span class="comment-date">{{comment.created|timesince}} ago</span>
             {% if request.user == comment.name %}
             (<span class="comment-actions">
                 <a href="{% url 'edit-comment' comment.id %}" class="edit-comment">Edit</a>|
