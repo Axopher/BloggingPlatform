@@ -4,6 +4,11 @@ from rest_framework.reverse import reverse
 
 from django.utils.html import strip_tags
 
+
+
+
+
+
 class PostSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
     # url = serializers.HyperlinkedIdentityField(

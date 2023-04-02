@@ -6,6 +6,8 @@ from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsStaffEditorPermission,IsPostCreatorOrReadOnly,IsCommentCreatorOrReadOnly
 
 # Create your views here.
+
+
 class PostListCreateAPIView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
